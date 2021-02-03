@@ -17,14 +17,11 @@ const winURL = process.env.NODE_ENV === 'development'
   : `file://${__dirname}/index.html`
 
 function createWindow () {
-  /**
-   * Initial window options
-   */
   mainWindow = new BrowserWindow({
     useContentSize: true,
     show: false,
-    width: 1200,
-    height: 700
+    minWidth: 1200,
+    minHeight: 700
   })
   Menu.setApplicationMenu(null)
   mainWindow.maximize()
@@ -37,7 +34,22 @@ function createWindow () {
   })
 }
 
-app.on('ready', createWindow)
+app.on('ready', () => {
+  createWindow()
+  // 创建临时文件夹
+  var fs = require('fs')
+  try {
+    fs.mkdirSync('./tmp', (err) => { throw err })
+    fs.mkdirSync('./tmp/img', (err) => { throw err })
+    fs.mkdirSync('./tmp/xml', (err) => { throw err })
+    fs.mkdirSync('./tmp/img/front_contrast', (err) => { throw err })
+    fs.mkdirSync('./tmp/img/front_cut', (err) => { throw err })
+    fs.mkdirSync('./tmp/img/side_contrast', (err) => { throw err })
+    fs.mkdirSync('./tmp/img/side_cut', (err) => { throw err })
+  } catch (error) {
+    console.log('临时文件夹创建失败')
+  }
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

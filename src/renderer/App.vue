@@ -6,7 +6,7 @@
 
 <script>
   export default {
-    name: '骨科影像智能量测系统'
+    name: 'oims'
   }
 </script>
 
@@ -19,4 +19,17 @@
   #app{
     height: 100%;
   }
+  
+  .el-card__header {
+    padding: 15px 20px !important;
+  }
+  .el-card__body{
+    padding: 0 !important;
+  }
+  
+  .el-divider{
+    width: auto !important;
+    margin: 8px 16px !important;
+  }
+  
 </style>
