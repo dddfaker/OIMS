@@ -1,8 +1,8 @@
-# oims
+# OIMS
 
-> An electron-vue project
+> 一款基于Electron-vue以及ElementUI开发的医学骨科影像识别系统
 
-#### Build Setup
+#### 项目配置步骤
 
 ``` bash
 # install dependencies
