@@ -51,6 +51,7 @@ export default {
 <style lang="less">
   .sub-tool-header-content{
     width: 100%;
+    height: 100%;
     background: #e5e7e8;
     display: flex;
     align-items: center;
@@ -61,7 +62,7 @@ export default {
   // 二级顶部工具栏
   @sub_tool_header_height: 36px;
   .sub-tool-header{
-    flex: 0 1 @sub_tool_header_height;
+    flex: 0 0 @sub_tool_header_height;
     background: #e5e7e8;
     display: flex;
     align-items: center;

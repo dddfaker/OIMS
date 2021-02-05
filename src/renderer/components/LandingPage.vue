@@ -39,12 +39,6 @@ export default {
     return {
     }
   }
-  // computed: {
-  //   ...mapState([''])
-  // }
-  // methods: {
-  //   ...mapMutations([''])
-  // }
 }
 </script>
 
@@ -55,12 +49,13 @@ export default {
     display: flex;
     flex-direction: column;
     height: 100%;
+    overflow: hidden;
   }
   .tool-header{
-    flex: 0 1 @tool_header_height;
+    flex: 0 0 @tool_header_height;
   }
   .sub-tool-header{
-    flex: 0 1 @sub_tool_header_height;
+    flex: 0 0 @sub_tool_header_height;
   }
   .main-content{
     flex: 1 1 auto;

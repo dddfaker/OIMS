@@ -6,13 +6,13 @@
     </div>
     <div class="tool-btn-center-group">
       <el-tooltip content="选择正面图文件夹" placement="bottom-start" :open-delay=700>
-        <div id="frontDirSelectBtn" class="tool-btn">
+        <div class="tool-btn"  @click="SelectFrontDir">
             <i class="fa fa-folder-open"></i>
             <span>正面</span>
         </div>
       </el-tooltip>
       <el-tooltip content="选择侧面图文件夹" placement="bottom-start" :open-delay=700>
-        <div id="sideDirSelectBtn" class="tool-btn">
+        <div class="tool-btn"  @click="SelectSideDir">
           <i class="fa fa-folder-open"></i>
           <span>侧面</span>
         </div>
@@ -33,8 +33,8 @@
             <i class="fa fa-clipboard"></i>
             <span>文件</span>
           </div>
-          <el-menu-item index="1-1">选择正面图文件夹</el-menu-item>
-          <el-menu-item index="1-2">选择侧面图文件夹</el-menu-item>
+          <el-menu-item index="1-1" @click="SelectFrontDir">选择正面图文件夹</el-menu-item>
+          <el-menu-item index="1-2" @click="SelectSideDir">选择侧面图文件夹</el-menu-item>
           <el-divider></el-divider>
           <el-menu-item index="1-3">打印（导出为PDF）</el-menu-item>
           <el-menu-item index="1-4">使用说明</el-menu-item>
@@ -67,10 +67,48 @@
 </template>
 
 <script>
+const {dialog} = require('electron').remote
+
 export default {
   data () {
     return {
       isDrawerShow: false
+    }
+  },
+  methods: {
+    SelectFrontDir () {
+      var result = dialog.showOpenDialog({ // 低版本无promise用法
+        title: '选择正面图文件夹',
+        buttonLabel: '选择文件夹',
+        properties: ['openDirectory', 'showHiddenFiles']
+      })
+      if (result) {
+        this.$store.commit('ChangeDirPath', {
+          flag: 1,
+          path: result[0]
+        })
+        this.$store.dispatch('LoadDir', {
+          flag: 1,
+          path: result[0]
+        })
+      }
+    },
+    SelectSideDir () {
+      var result = dialog.showOpenDialog({ // 低版本无promise用法
+        title: '选择侧面图文件夹',
+        buttonLabel: '选择文件夹',
+        properties: ['openDirectory', 'showHiddenFiles']
+      })
+      if (result) {
+        this.$store.commit('ChangeDirPath', {
+          flag: 2,
+          path: result[0]
+        })
+        this.$store.dispatch('LoadDir', {
+          flag: 2,
+          path: result[0]
+        })
+      }
     }
   }
 }

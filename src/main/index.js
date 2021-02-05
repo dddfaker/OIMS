@@ -21,7 +21,10 @@ function createWindow () {
     useContentSize: true,
     show: false,
     minWidth: 1200,
-    minHeight: 700
+    minHeight: 700,
+    webPreferences: {
+      webSecurity: false
+    }
   })
   Menu.setApplicationMenu(null)
   mainWindow.maximize()

@@ -31,5 +31,9 @@
     width: auto !important;
     margin: 8px 16px !important;
   }
+
+  .cell{
+    text-overflow: unset !important;
+  }
   
 </style>

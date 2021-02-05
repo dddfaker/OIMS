@@ -1,27 +1,70 @@
+const fs = require('fs')
+
 const state = {
-  // frontParamSet: {   // 正面图的相关变量
-  //   'dirPath': "",                                          // 文件夹路径
-  //   'contrastDirPath': '../../../static/temp_data/img/front_contrast/',   // 对比度调整后的保存路径
-  //   'cutDirPath': './temp_data/img/front_cut/',             // 裁剪后保存路径
-  //   'fileDict': OrderedDict(),                              // 文件列表，采用顺序字典，便于查找（键名为文件名，键值为字典）
-  //   'curFilename': ""                                       // 当前打开的文件文件名
-  // },
-  // sideParamSet: {    // 侧面图的相关变量
-  //   'dirPath': "",
-  //   'contrastDirPath': './temp_data/img/side_contrast/',
-  //   'cutDirPath': './temp_data/img/side_cut/',
-  //   'fileDict': OrderedDict(),
-  //   'curFilename': ""
-  // }
+  // 正面图的相关变量
+  params1: {
+    'dirPath': '', // 文件夹路径
+    'contrastDirPath': '/tmp/img/front_contrast/', // 对比度调整后的保存路径
+    'cutDirPath': '/tmp/img/front_cut/', // 裁剪后保存路径
+    'fileList': {}, // 文件列表
+    'curFilePath': '' // 当前打开的文件文件名
+  },
+  // 侧面图的相关变量
+  params2: {
+    'dirPath': '',
+    'contrastDirPath': '/tmp/img/side_contrast/',
+    'cutDirPath': '/tmp/img/side_cut/',
+    'fileList': {},
+    'curFilePath': ''
+  }
 }
 
 const mutations = {
+  // 修改图片目录的路径。flag=1：正面图，flag=2：侧面图
+  ChangeDirPath (state, payload) {
+    var params = payload.flag === 1 ? state.params1 : state.params2
+    params.dirPath = payload.path + '\\'
+  },
+  // 修改文件列表
+  ChangeFileList (state, payload) {
+    var params = payload.flag === 1 ? state.params1 : state.params2
+    params.fileList = payload.fileList
+  },
+  // 修改当前打开的图片
+  ChangeCurFilePath (state, payload) {
+    var params = payload.flag === 1 ? state.params1 : state.params2
+    params.curFilePath = payload.curFilePath
+  }
 }
 
 const actions = {
-  someAsyncTask ({ commit }) {
-    // do something async
-    commit('INCREMENT_MAIN_COUNTER')
+  // （读文件为异步操作）读取文件目录，修改文件列表。flag=1：正面图，flag=2：侧面图
+  LoadDir (context, payload) {
+    fs.readdir(payload.path, (err, files) => {
+      if (err) {
+        return console.error(err)
+      }
+      var tempFileList = {}
+      var fileType = ['jpg', 'jpeg', 'png', 'bmp']
+      files.forEach((file) => {
+        if (fileType.includes(file.split('.').pop().toLowerCase())) {
+          tempFileList[file] = {
+            'path': payload.path + '\\' + file,
+            'isMeasured': false
+          }
+        }
+      })
+      context.commit('ChangeFileList', {
+        flag: payload.flag,
+        fileList: tempFileList
+      })
+      if (Object.keys(tempFileList).length !== 0) {
+        context.commit('ChangeCurFilePath', {
+          flag: payload.flag,
+          curFilePath: tempFileList[Object.keys(tempFileList)[0]].path
+        })
+      }
+    })
   }
 }
 
