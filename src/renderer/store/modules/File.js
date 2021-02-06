@@ -34,6 +34,18 @@ const mutations = {
   ChangeCurFilePath (state, payload) {
     var params = payload.flag === 1 ? state.params1 : state.params2
     params.curFilePath = payload.curFilePath
+  },
+  // 删除文件
+  DeleteFile (state, payload) {
+    var params = payload.flag === 1 ? state.params1 : state.params2
+    var temp = JSON.parse(JSON.stringify(params.fileList))
+    delete temp[payload.filename]
+    params.fileList = temp
+    if (Object.keys(temp).length === 0) {
+      params.curFilePath = ''
+    } else {
+      params.curFilePath = temp[Object.keys(temp)[0]].path
+    }
   }
 }
 

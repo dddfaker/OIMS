@@ -4,10 +4,10 @@
       <div slot="header">
         <span class="file-list-title">正面图</span>
       </div>
-      <el-table :data="listData1" :show-header="false" max-height="260" @row-click="SelectFrontImg"
+      <el-table ref="table1" :data="listData1" :show-header="false" max-height="260" @row-click="SelectFrontImg"
                 style="cursor: pointer;" tooltip-effect="light"
                 :row-style="{height: '20px'}" :cell-style="{padding: '5px'}"
-                highlight-current-row="true">
+                :highlight-current-row="true">
         <el-table-column min-width="65" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <el-tooltip :content="scope.row.path" placement="top-start" :open-delay=700 effect="light">
@@ -15,8 +15,10 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column min-width="35" align="right" fixed="right">
-          <i class="fa fa-close file-close-btn"></i>
+        <el-table-column prop="oper" min-width="35" align="right" fixed="right">
+          <template slot-scope="scope">
+            <i class="fa fa-close file-close-btn" @click.stop="DeleteFrontFile(scope.row.filename)"></i>
+          </template>
         </el-table-column>
       </el-table>
     </el-card>
@@ -24,10 +26,10 @@
       <div slot="header">
         <span class="file-list-title">侧面图</span>
       </div>
-      <el-table :data="listData2" :show-header="false" max-height="260" @row-click="SelectSideImg"
+      <el-table ref="table2" :data="listData2" :show-header="false" max-height="260" @row-click="SelectSideImg"
                 style="cursor: pointer;" tooltip-effect="light"
                 :row-style="{height: '20px'}" :cell-style="{padding: '5px'}"
-                highlight-current-row="true">
+                :highlight-current-row="true">
         <el-table-column min-width="65" :show-overflow-tooltip="true">
           <template slot-scope="scope">
             <el-tooltip :content="scope.row.path" placement="top-start" :open-delay=700 effect="light">
@@ -36,7 +38,9 @@
           </template>
         </el-table-column>
         <el-table-column min-width="35" align="right" fixed="right">
-          <i class="fa fa-close file-close-btn"></i>
+          <template slot-scope="scope">
+            <i class="fa fa-close file-close-btn" @click.stop="DeleteSideFile(scope.row.filename)"></i>
+          </template>
         </el-table-column>
       </el-table>
     </el-card>
@@ -55,6 +59,11 @@ export default {
           'path': fileList[key].path
         })
       }
+      this.$nextTick(() => { // 设置表格中当前选中行
+        if (this.listData1.length > 0) {
+          this.$refs.table1.setCurrentRow(this.listData1[0])
+        }
+      })
       return listData
     },
     listData2 () {
@@ -66,6 +75,11 @@ export default {
           'path': fileList[key].path
         })
       }
+      this.$nextTick(() => {
+        if (this.listData2.length > 0) {
+          this.$refs.table2.setCurrentRow(this.listData2[0])
+        }
+      })
       return listData
     }
   },
@@ -80,6 +94,18 @@ export default {
       this.$store.commit('ChangeCurFilePath', {
         flag: 2,
         curFilePath: row.path
+      })
+    },
+    DeleteFrontFile (filename) {
+      this.$store.commit('DeleteFile', {
+        flag: 1,
+        filename: filename
+      })
+    },
+    DeleteSideFile (filename) {
+      this.$store.commit('DeleteFile', {
+        flag: 2,
+        filename: filename
       })
     }
   }
