@@ -1,10 +1,12 @@
 <template>
   <div class="file-list-area-content">
     <el-card class="file-list-box">
-      <div slot="header">
+      <div class="file-list-header" slot="header">
         <span class="file-list-title">正面图</span>
+        <i ref="frontRefreshBtn" @click="RefreshFrontFile"
+          :class="['fa', 'fa-refresh', 'file-list-refresh', isFrontRefreshing?'fa-spin':'']"></i>
       </div>
-      <el-table ref="table1" :data="listData1" :show-header="false" max-height="260" @row-click="SelectFrontImg"
+      <el-table ref="table1" :data="FrontListData" :show-header="false" max-height="260" @row-click="SelectFrontFile"
                 style="cursor: pointer;" tooltip-effect="light"
                 :row-style="{height: '20px'}" :cell-style="{padding: '5px'}"
                 :highlight-current-row="true">
@@ -23,10 +25,12 @@
       </el-table>
     </el-card>
     <el-card class="file-list-box">
-      <div slot="header">
+      <div class="file-list-header" slot="header">
         <span class="file-list-title">侧面图</span>
+        <i ref="sideRefreshBtn" @click="RefreshSideFile"
+          :class="['fa', 'fa-refresh', 'file-list-refresh', isSideRefreshing?'fa-spin':'']"></i>
       </div>
-      <el-table ref="table2" :data="listData2" :show-header="false" max-height="260" @row-click="SelectSideImg"
+      <el-table ref="table2" :data="SideListData" :show-header="false" max-height="260" @row-click="SelectSideFile"
                 style="cursor: pointer;" tooltip-effect="light"
                 :row-style="{height: '20px'}" :cell-style="{padding: '5px'}"
                 :highlight-current-row="true">
@@ -49,8 +53,14 @@
 
 <script>
 export default {
+  data () {
+    return {
+      isFrontRefreshing: false,
+      isSideRefreshing: false
+    }
+  },
   computed: {
-    listData1 () {
+    FrontListData () {
       let fileList = this.$store.state.File.params1.fileList
       let listData = []
       for (let key in fileList) {
@@ -60,13 +70,13 @@ export default {
         })
       }
       this.$nextTick(() => { // 设置表格中当前选中行
-        if (this.listData1.length > 0) {
-          this.$refs.table1.setCurrentRow(this.listData1[0])
+        if (this.FrontListData.length > 0) {
+          this.$refs.table1.setCurrentRow(this.FrontListData[0])
         }
       })
       return listData
     },
-    listData2 () {
+    SideListData () {
       var fileList = this.$store.state.File.params2.fileList
       var listData = []
       for (let key in fileList) {
@@ -76,21 +86,21 @@ export default {
         })
       }
       this.$nextTick(() => {
-        if (this.listData2.length > 0) {
-          this.$refs.table2.setCurrentRow(this.listData2[0])
+        if (this.SideListData.length > 0) {
+          this.$refs.table2.setCurrentRow(this.SideListData[0])
         }
       })
       return listData
     }
   },
   methods: {
-    SelectFrontImg (row) {
+    SelectFrontFile (row) {
       this.$store.commit('ChangeCurFilePath', {
         flag: 1,
         curFilePath: row.path
       })
     },
-    SelectSideImg (row) {
+    SelectSideFile (row) {
       this.$store.commit('ChangeCurFilePath', {
         flag: 2,
         curFilePath: row.path
@@ -107,6 +117,30 @@ export default {
         flag: 2,
         filename: filename
       })
+    },
+    RefreshFrontFile () {
+      let that = this
+      that.$store.dispatch('LoadDir', {
+        flag: 1,
+        path: that.$store.state.File.params1.dirPath
+      })
+      that.isFrontRefreshing = true
+      let clock = setInterval(() => {
+        that.isFrontRefreshing = false
+        clearInterval(clock)
+      }, 1000)
+    },
+    RefreshSideFile () {
+      let that = this
+      that.$store.dispatch('LoadDir', {
+        flag: 2,
+        path: that.$store.state.File.params2.dirPath
+      })
+      that.isSideRefreshing = true
+      let clock = setInterval(() => {
+        that.isSideRefreshing = false
+        clearInterval(clock)
+      }, 1000)
     }
   }
 }
@@ -129,10 +163,23 @@ export default {
     flex: 1 0 40%;
     margin: 0px 4px 0px 4px;
   }
+  .file-list-header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
   .file-list-title{
     font-size: 1.1rem;
     font-weight: bold;
     color: black;
+  }
+  .file-list-refresh{
+    color: #515151;
+    cursor: pointer;
+  }
+  .file-list-refresh:hover{
+    color: #808080;
   }
   .el-table__body-wrapper::-webkit-scrollbar {
     width: 7px;
@@ -149,8 +196,5 @@ export default {
   }
   .file-close-btn:hover{
     color:  rgb(255, 122, 122);
-  }
-  .file-selected{
-    
   }
 </style>
