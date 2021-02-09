@@ -17,11 +17,11 @@
           <span>侧面</span>
         </div>
       </el-tooltip>
-      <div id="measureBtn" class="tool-btn">
+      <div class="tool-btn" @click="Measure">
         <i class="fa fa-play"></i>
         <span>量测</span>
       </div>
-      <div id="printBtn" class="tool-btn">
+      <div class="tool-btn">
         <i class="fa fa-print"></i>
         <span>打印</span>
       </div>
@@ -68,6 +68,8 @@
 
 <script>
 const {dialog} = require('electron').remote
+const fs = require('fs')
+const parser = require('fast-xml-parser')
 
 export default {
   data () {
@@ -109,6 +111,28 @@ export default {
           path: result[0]
         })
       }
+    },
+    Measure () {
+      // 将图片文件传送至后端，量测后，将结果保存至本地
+      // 当前仅侧面图！！！
+      let that = this
+      fs.readFile(that.$store.state.File.resultPath, (err, data) => {
+        if (err) {
+          return console.error(err)
+        }
+        let tempFileList = JSON.parse(JSON.stringify(that.$store.state.File.params2.fileList))
+        let imgList = parser.parse(data.toString())['image-list']['image']
+        imgList.forEach(item => {
+          tempFileList[item.name]['isMeasured'] = true
+          tempFileList[item.name]['sacrum'] = item.sacrum
+          tempFileList[item.name]['femoralhead1'] = item.femoralhead1
+          tempFileList[item.name]['femoralhead2'] = item.femoralhead2
+        })
+        that.$store.commit('ChangeFileList', {
+          flag: 2,
+          fileList: tempFileList
+        })
+      })
     }
   }
 }

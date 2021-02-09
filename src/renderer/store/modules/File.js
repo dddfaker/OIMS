@@ -4,19 +4,21 @@ const state = {
   // 正面图的相关变量
   params1: {
     'dirPath': '', // 文件夹路径
-    'contrastDirPath': '/tmp/img/front_contrast/', // 对比度调整后的保存路径
-    'cutDirPath': '/tmp/img/front_cut/', // 裁剪后保存路径
+    'contrastDirPath': './tmp/img/front_contrast/', // 对比度调整后的保存路径
+    'cutDirPath': './tmp/img/front_cut/', // 裁剪后保存路径
     'fileList': {}, // 文件列表
-    'curFilePath': '' // 当前打开的文件文件名
+    'curFilename': '' // 当前打开的文件文件名
   },
   // 侧面图的相关变量
   params2: {
     'dirPath': '',
-    'contrastDirPath': '/tmp/img/side_contrast/',
-    'cutDirPath': '/tmp/img/side_cut/',
+    'contrastDirPath': './tmp/img/side_contrast/',
+    'cutDirPath': './tmp/img/side_cut/',
     'fileList': {},
-    'curFilePath': ''
-  }
+    'curFilename': ''
+  },
+  selectedImgBox: 1, // 当前选中的图片框
+  resultPath: './tmp/xml/result.xml' // 量测结果文件路径
 }
 
 const mutations = {
@@ -25,15 +27,18 @@ const mutations = {
     var params = payload.flag === 1 ? state.params1 : state.params2
     params.dirPath = payload.path + '\\'
   },
-  // 修改文件列表
+  // 修改整个文件列表
   ChangeFileList (state, payload) {
     var params = payload.flag === 1 ? state.params1 : state.params2
     params.fileList = payload.fileList
   },
+  // 修改单个文件列表项
+  ChangeFileListItem (state, payload) {
+  },
   // 修改当前打开的图片
   ChangeCurFilePath (state, payload) {
     var params = payload.flag === 1 ? state.params1 : state.params2
-    params.curFilePath = payload.curFilePath
+    params.curFilename = payload.curFilename
   },
   // 删除文件
   DeleteFile (state, payload) {
@@ -42,15 +47,21 @@ const mutations = {
     delete temp[payload.filename]
     params.fileList = temp
     if (Object.keys(temp).length === 0) {
-      params.curFilePath = ''
+      params.curFilename = ''
     } else {
-      params.curFilePath = temp[Object.keys(temp)[0]].path
+      params.curFilename = Object.keys(temp)[0]
+    }
+  },
+  // 切换选中的图片框
+  ChangeSelectedImgBox (state, payload) {
+    if (state.selectedImgBox !== payload.flag) {
+      state.selectedImgBox = payload.flag
     }
   }
 }
 
 const actions = {
-  // （读文件为异步操作）读取文件目录，修改文件列表。flag=1：正面图，flag=2：侧面图
+  // 公用操作。读取文件目录，修改文件列表（读文件为异步操作）。flag=1：正面图，flag=2：侧面图
   LoadDir (context, payload) {
     fs.readdir(payload.path, (err, files) => {
       if (err) {
@@ -73,7 +84,12 @@ const actions = {
       if (Object.keys(tempFileList).length !== 0) {
         context.commit('ChangeCurFilePath', {
           flag: payload.flag,
-          curFilePath: tempFileList[Object.keys(tempFileList)[0]].path
+          curFilename: Object.keys(tempFileList)[0]
+        })
+      } else {
+        context.commit('ChangeCurFilePath', {
+          flag: payload.flag,
+          curFilename: ''
         })
       }
     })

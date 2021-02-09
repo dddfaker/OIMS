@@ -97,13 +97,13 @@ export default {
     SelectFrontFile (row) {
       this.$store.commit('ChangeCurFilePath', {
         flag: 1,
-        curFilePath: row.path
+        curFilename: row.filename
       })
     },
     SelectSideFile (row) {
       this.$store.commit('ChangeCurFilePath', {
         flag: 2,
-        curFilePath: row.path
+        curFilename: row.filename
       })
     },
     DeleteFrontFile (filename) {
