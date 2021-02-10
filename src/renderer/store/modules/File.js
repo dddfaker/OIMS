@@ -34,6 +34,8 @@ const mutations = {
   },
   // 修改单个文件列表项
   ChangeFileListItem (state, payload) {
+    var params = payload.flag === 1 ? state.params1 : state.params2
+    params.fileList[payload.filename] = payload.fileListItem
   },
   // 修改当前打开的图片
   ChangeCurFilePath (state, payload) {
@@ -73,7 +75,8 @@ const actions = {
         if (fileType.includes(file.split('.').pop().toLowerCase())) {
           tempFileList[file] = {
             'path': payload.path + '\\' + file,
-            'isMeasured': false
+            'isMeasured': false, // 是否已量测
+            'isParsed': false // 量测结果是否已解析
           }
         }
       })

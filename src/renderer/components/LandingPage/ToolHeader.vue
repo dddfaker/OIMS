@@ -113,8 +113,9 @@ export default {
       }
     },
     Measure () {
-      // 将图片文件传送至后端，量测后，将结果保存至本地
+      // （将图片文件传送至后端，量测后，将结果保存至本地）
       // 当前仅侧面图！！！
+      // 以下为解析文件步骤（仅将原始数据存入全局，并设置isMeasured为true）
       let that = this
       fs.readFile(that.$store.state.File.resultPath, (err, data) => {
         if (err) {
@@ -124,14 +125,17 @@ export default {
         let imgList = parser.parse(data.toString())['image-list']['image']
         imgList.forEach(item => {
           tempFileList[item.name]['isMeasured'] = true
-          tempFileList[item.name]['sacrum'] = item.sacrum
-          tempFileList[item.name]['femoralhead1'] = item.femoralhead1
-          tempFileList[item.name]['femoralhead2'] = item.femoralhead2
+          tempFileList[item.name]['measureRes'] = {
+            'sacrum': item.sacrum,
+            'femoralhead1': item.femoralhead1,
+            'femoralhead2': item.femoralhead2
+          }
         })
         that.$store.commit('ChangeFileList', {
           flag: 2,
           fileList: tempFileList
         })
+        console.log(tempFileList)
       })
     }
   }
