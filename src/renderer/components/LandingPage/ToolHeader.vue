@@ -121,21 +121,21 @@ export default {
         if (err) {
           return console.error(err)
         }
-        let tempFileList = JSON.parse(JSON.stringify(that.$store.state.File.params2.fileList))
+        let tempResList = JSON.parse(JSON.stringify(that.$store.state.File.params2.resList))
+        console.log(tempResList)
         let imgList = parser.parse(data.toString())['image-list']['image']
         imgList.forEach(item => {
-          tempFileList[item.name]['isMeasured'] = true
-          tempFileList[item.name]['measureRes'] = {
+          tempResList[item.name]['isMeasured'] = true
+          tempResList[item.name]['measureRes'] = {
             'sacrum': item.sacrum,
             'femoralhead1': item.femoralhead1,
             'femoralhead2': item.femoralhead2
           }
         })
-        that.$store.commit('ChangeFileList', {
+        that.$store.commit('ChangeResList', {
           flag: 2,
-          fileList: tempFileList
+          resList: tempResList
         })
-        console.log(tempFileList)
       })
     }
   }

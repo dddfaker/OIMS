@@ -36,7 +36,7 @@ export default {
   watch: {
     img1Name (nv, ov) {
       if (nv !== '') {
-        let imgInfo = JSON.parse(JSON.stringify(this.$store.state.File.params1.fileList[nv]))
+        let imgInfo = JSON.parse(JSON.stringify(this.$store.state.File.params1.resList[nv]))
         this.ShowImage(canvas1, imgInfo)
       } else {
         canvas1.clear()
@@ -44,7 +44,7 @@ export default {
     },
     img2Name (nv, ov) {
       if (nv !== '') {
-        let imgInfo = JSON.parse(JSON.stringify(this.$store.state.File.params2.fileList[nv]))
+        let imgInfo = JSON.parse(JSON.stringify(this.$store.state.File.params2.resList[nv]))
         this.ShowImage(canvas2, imgInfo)
       } else {
         canvas2.clear()
@@ -60,6 +60,7 @@ export default {
     // 将图片设置为背景，并调整图片与画布大小。若有量测数据，则渲染至画布上
     ShowImage (canvas, imgInfo) {
       let that = this
+      canvas.clear() // 清空画布
       let img = new Image()
       img.src = imgInfo.path
       img.onload = () => {
@@ -76,14 +77,46 @@ export default {
         if (imgInfo.isMeasured) {
           let parseRes = that.ParseResult(imgInfo.measureRes, scale, originalHeight)
           let filename = imgInfo.path.split('\\').pop()
-          let tempItem = JSON.parse(JSON.stringify(that.$store.state.File.params2.fileList[filename]))
-          tempItem.isParsed = true
-          tempItem['parseRes'] = parseRes
-          // 改后会导致文件列表项被刷新！！！！
-          that.$store.commit('ChangeFileListItem', {
+          let tempResList = JSON.parse(JSON.stringify(that.$store.state.File.params2.resList))
+          tempResList[filename].isParsed = true
+          tempResList[filename]['parseRes'] = parseRes
+          that.$store.commit('ChangeResList', {
             flag: 2,
-            filename: filename,
-            fileListItem: tempItem
+            resList: tempResList
+          })
+          let lineAttr = {
+            fill: 'blue',
+            stroke: 'blue',
+            strokeWidth: 1,
+            selectable: false,
+            evented: false
+          }
+          let p0 = new fabric.Circle({left: parseRes.p0[0] - 2, top: parseRes.p0[1] - 2, radius: 2, fill: 'red'})
+          let p1 = new fabric.Circle({left: parseRes.p1[0] - 2, top: parseRes.p1[1] - 2, radius: 2, fill: 'red'})
+          let p3 = new fabric.Circle({left: parseRes.p3[0] - 2, top: parseRes.p3[1] - 2, radius: 2, fill: 'red', selectable: false, evented: false})
+          let p01Line = new fabric.Line([parseRes.p0[0], parseRes.p0[1], parseRes.p1[0], parseRes.p1[1]], lineAttr)
+          let p5 = new fabric.Circle({left: parseRes.p5[0] - 2, top: parseRes.p5[1] - 2, radius: 2, fill: 'red'})
+          let p6 = new fabric.Circle({left: parseRes.p5[0] - 2, top: parseRes.p5[1] - 2, radius: 2, fill: 'red'})
+          let p2 = new fabric.Circle({left: parseRes.p2[0] - 2, top: parseRes.p2[1] - 2, radius: 2, fill: 'red', selectable: false, evented: false})
+          let p56Line = new fabric.Line([parseRes.p5[0], parseRes.p5[1], parseRes.p6[0], parseRes.p6[1]], lineAttr)
+          let p23Line = new fabric.Line([parseRes.p2[0], parseRes.p2[1], parseRes.p3[0], parseRes.p3[1]], lineAttr)
+          p0.hasControls = false
+          p1.hasControls = false
+          p2.hasControls = false
+          p3.hasControls = false
+          p5.hasControls = false
+          p6.hasControls = false
+          if (parseRes.p6 != null) {
+            p6 = new fabric.Circle({left: parseRes.p6[0] - 2, top: parseRes.p6[1] - 2, radius: 2, fill: 'red'})
+            p56Line = new fabric.Line([parseRes.p5[0], parseRes.p5[1], parseRes.p6[0], parseRes.p6[1]], lineAttr)
+          }
+          canvas.add(p01Line, p23Line, p56Line, p0, p1, p2, p3, p5, p6)
+          canvas.renderAll.bind(canvas)
+
+          canvas.on('object:moving', (e) => {
+            if (e.target) {
+              console.log(e.target)
+            }
           })
         }
       }

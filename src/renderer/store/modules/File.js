@@ -6,7 +6,8 @@ const state = {
     'dirPath': '', // 文件夹路径
     'contrastDirPath': './tmp/img/front_contrast/', // 对比度调整后的保存路径
     'cutDirPath': './tmp/img/front_cut/', // 裁剪后保存路径
-    'fileList': {}, // 文件列表
+    'fileList': {}, // 文件列表（用于维护文件列表栏）
+    'resList': {}, // 量测结果列表（用于维护图片的量测结果）
     'curFilename': '' // 当前打开的文件文件名
   },
   // 侧面图的相关变量
@@ -15,6 +16,7 @@ const state = {
     'contrastDirPath': './tmp/img/side_contrast/',
     'cutDirPath': './tmp/img/side_cut/',
     'fileList': {},
+    'resList': {},
     'curFilename': ''
   },
   selectedImgBox: 1, // 当前选中的图片框
@@ -32,13 +34,13 @@ const mutations = {
     var params = payload.flag === 1 ? state.params1 : state.params2
     params.fileList = payload.fileList
   },
-  // 修改单个文件列表项
-  ChangeFileListItem (state, payload) {
+  // 修改整个量测结果列表
+  ChangeResList (state, payload) {
     var params = payload.flag === 1 ? state.params1 : state.params2
-    params.fileList[payload.filename] = payload.fileListItem
+    params.resList = payload.resList
   },
   // 修改当前打开的图片
-  ChangeCurFilePath (state, payload) {
+  ChangeCurFilename (state, payload) {
     var params = payload.flag === 1 ? state.params1 : state.params2
     params.curFilename = payload.curFilename
   },
@@ -69,11 +71,15 @@ const actions = {
       if (err) {
         return console.error(err)
       }
-      var tempFileList = {}
-      var fileType = ['jpg', 'jpeg', 'png', 'bmp']
+      let tempFileList = {}
+      let fileType = ['jpg', 'jpeg', 'png', 'bmp']
+      let tempResList = {}
       files.forEach((file) => {
         if (fileType.includes(file.split('.').pop().toLowerCase())) {
           tempFileList[file] = {
+            'path': payload.path + '\\' + file
+          }
+          tempResList[file] = {
             'path': payload.path + '\\' + file,
             'isMeasured': false, // 是否已量测
             'isParsed': false // 量测结果是否已解析
@@ -84,13 +90,17 @@ const actions = {
         flag: payload.flag,
         fileList: tempFileList
       })
+      context.commit('ChangeResList', {
+        flag: payload.flag,
+        resList: tempResList
+      })
       if (Object.keys(tempFileList).length !== 0) {
-        context.commit('ChangeCurFilePath', {
+        context.commit('ChangeCurFilename', {
           flag: payload.flag,
           curFilename: Object.keys(tempFileList)[0]
         })
       } else {
-        context.commit('ChangeCurFilePath', {
+        context.commit('ChangeCurFilename', {
           flag: payload.flag,
           curFilename: ''
         })

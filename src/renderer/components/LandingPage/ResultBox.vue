@@ -25,14 +25,19 @@ export default {
   computed: {
     isParsed2 () {
       let curFilename = this.$store.state.File.params2.curFilename
-      return this.$store.state.File.params2.fileList[curFilename].isParsed
+      let resList = this.$store.state.File.params2.resList
+      if (resList[curFilename]) {
+        return this.$store.state.File.params2.resList[curFilename].isParsed
+      } else {
+        return false
+      }
     }
   },
   watch: {
     isParsed2 (nv, ov) {
       if (nv) {
         let curFilename = this.$store.state.File.params2.curFilename
-        let parseRes = JSON.parse(JSON.stringify(this.$store.state.File.params2.fileList[curFilename].parseRes))
+        let parseRes = JSON.parse(JSON.stringify(this.$store.state.File.params2.resList[curFilename].parseRes))
         this.result = this.CalResult(parseRes)
       } else {
         this.result = {
