@@ -7,7 +7,7 @@ const state = {
     'contrastDirPath': './tmp/img/front_contrast/', // 对比度调整后的保存路径
     'cutDirPath': './tmp/img/front_cut/', // 裁剪后保存路径
     'fileList': {}, // 文件列表（用于维护文件列表栏）
-    'resList': {}, // 量测结果列表（用于维护图片的量测结果）
+    'resList': {}, // 量测结果列表（用于维护图片的量测结果，包含每一项）
     'curFilename': '' // 当前打开的文件文件名
   },
   // 侧面图的相关变量
@@ -81,8 +81,11 @@ const actions = {
           }
           tempResList[file] = {
             'path': payload.path + '\\' + file,
-            'isMeasured': false, // 是否已量测
-            'isParsed': false // 量测结果是否已解析
+            'isMeasured': false,
+            'isParsed': false,
+            'isChanged': false,
+            'measureRes': {},
+            'parseRes': {}
           }
         }
       })

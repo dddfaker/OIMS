@@ -25,34 +25,28 @@ export default {
   computed: {
     isParsed2 () {
       let curFilename = this.$store.state.File.params2.curFilename
-      let resList = this.$store.state.File.params2.resList
-      if (resList[curFilename]) {
-        return this.$store.state.File.params2.resList[curFilename].isParsed
-      } else {
-        return false
-      }
-    }
-  },
-  watch: {
-    isParsed2 (nv, ov) {
-      if (nv) {
-        let curFilename = this.$store.state.File.params2.curFilename
-        let parseRes = JSON.parse(JSON.stringify(this.$store.state.File.params2.resList[curFilename].parseRes))
+      let isParsed = this.$store.state.File.params2.resList[curFilename].isParsed
+      if (isParsed) {
+        let parseRes = this.$store.state.File.params2.resList[curFilename].parseRes
         this.result = this.CalResult(parseRes)
+        return true
       } else {
         this.result = {
           'ss': '',
           'pt': '',
           'pi': ''
         }
+        return false
       }
     }
+  },
+  watch: {
   },
   methods: {
     CalResult (parseRes) {
       let ss = Math.atan((parseRes.p1[1] - parseRes.p0[1]) / (parseRes.p1[0] - parseRes.p0[0])) *
                 180 / Math.PI
-      let pt = 90.0 - (Math.atan((parseRes.p3[1] - parseRes.p2[1]) / (parseRes.p3[0] - parseRes.p2[0])) *
+      let pt = 90.0 - (Math.atan((parseRes.p2[1] - parseRes.p5[1]) / (parseRes.p2[0] - parseRes.p5[0])) *
                 180 / Math.PI)
       let pi = ss + pt
       return {

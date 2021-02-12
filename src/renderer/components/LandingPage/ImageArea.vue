@@ -75,15 +75,21 @@ export default {
           scaleY: scale
         })
         if (imgInfo.isMeasured) {
-          let parseRes = that.ParseResult(imgInfo.measureRes, scale, originalHeight)
+          let parseRes = {}
           let filename = imgInfo.path.split('\\').pop()
-          let tempResList = JSON.parse(JSON.stringify(that.$store.state.File.params2.resList))
-          tempResList[filename].isParsed = true
-          tempResList[filename]['parseRes'] = parseRes
-          that.$store.commit('ChangeResList', {
-            flag: 2,
-            resList: tempResList
-          })
+          if (!imgInfo.isParsed) {
+            parseRes = that.ParseResult(imgInfo.measureRes, scale, originalHeight)
+            let tempResList = JSON.parse(JSON.stringify(that.$store.state.File.params2.resList))
+            tempResList[filename].isParsed = true
+            tempResList[filename]['parseRes'] = parseRes
+            that.$store.commit('ChangeResList', {
+              flag: 2,
+              resList: tempResList
+            })
+          } else {
+            parseRes = JSON.parse(JSON.stringify(that.$store.state.File.params2.resList[filename].parseRes))
+          }
+          // 绘制图线
           let lineAttr = {
             fill: 'blue',
             stroke: 'blue',
@@ -91,31 +97,118 @@ export default {
             selectable: false,
             evented: false
           }
-          let p0 = new fabric.Circle({left: parseRes.p0[0] - 2, top: parseRes.p0[1] - 2, radius: 2, fill: 'red'})
-          let p1 = new fabric.Circle({left: parseRes.p1[0] - 2, top: parseRes.p1[1] - 2, radius: 2, fill: 'red'})
-          let p3 = new fabric.Circle({left: parseRes.p3[0] - 2, top: parseRes.p3[1] - 2, radius: 2, fill: 'red', selectable: false, evented: false})
+          let pRadius = 2
+          let pFill = 'red'
+          let p25Line = new fabric.Line([parseRes.p2[0], parseRes.p2[1], parseRes.p5[0], parseRes.p5[1]], lineAttr)
           let p01Line = new fabric.Line([parseRes.p0[0], parseRes.p0[1], parseRes.p1[0], parseRes.p1[1]], lineAttr)
-          let p5 = new fabric.Circle({left: parseRes.p5[0] - 2, top: parseRes.p5[1] - 2, radius: 2, fill: 'red'})
-          let p6 = new fabric.Circle({left: parseRes.p5[0] - 2, top: parseRes.p5[1] - 2, radius: 2, fill: 'red'})
-          let p2 = new fabric.Circle({left: parseRes.p2[0] - 2, top: parseRes.p2[1] - 2, radius: 2, fill: 'red', selectable: false, evented: false})
-          let p56Line = new fabric.Line([parseRes.p5[0], parseRes.p5[1], parseRes.p6[0], parseRes.p6[1]], lineAttr)
-          let p23Line = new fabric.Line([parseRes.p2[0], parseRes.p2[1], parseRes.p3[0], parseRes.p3[1]], lineAttr)
+          let p2 = new fabric.Circle({left: parseRes.p2[0] - pRadius, top: parseRes.p2[1] - pRadius, radius: pRadius, fill: pFill, selectable: false, evented: false})
+          let p0 = new fabric.Circle({
+            left: parseRes.p0[0] - pRadius,
+            top: parseRes.p0[1] - pRadius,
+            radius: pRadius,
+            fill: pFill,
+            'self': 'p0',
+            'centerP': p2,
+            'adLine': p01Line,
+            'centerLine': p25Line})
+          let p1 = new fabric.Circle({
+            left: parseRes.p1[0] - pRadius,
+            top: parseRes.p1[1] - pRadius,
+            radius: pRadius,
+            fill: pFill,
+            'self': 'p1',
+            'centerP': p2,
+            'adLine': p01Line,
+            'centerLine': p25Line})
+          let p34Line = new fabric.Line([parseRes.p3[0], parseRes.p3[1], parseRes.p3[0], parseRes.p3[1]], lineAttr)
+          let p5 = new fabric.Circle({left: parseRes.p5[0] - pRadius, top: parseRes.p5[1] - pRadius, radius: pRadius, fill: pFill, selectable: false, evented: false})
+          let p3 = new fabric.Circle({
+            left: parseRes.p3[0] - pRadius,
+            top: parseRes.p3[1] - pRadius,
+            radius: pRadius,
+            fill: pFill,
+            'self': 'p3',
+            'centerP': p5,
+            'adLine': p34Line,
+            'centerLine': p25Line})
+          let p4 = new fabric.Circle({
+            left: parseRes.p3[0] - pRadius,
+            top: parseRes.p3[1] - pRadius,
+            radius: pRadius,
+            fill: pFill,
+            'self': 'p4',
+            'centerP': p5,
+            'adLine': p34Line,
+            'centerLine': p25Line})
           p0.hasControls = false
           p1.hasControls = false
           p2.hasControls = false
           p3.hasControls = false
+          p4.hasControls = false
           p5.hasControls = false
-          p6.hasControls = false
-          if (parseRes.p6 != null) {
-            p6 = new fabric.Circle({left: parseRes.p6[0] - 2, top: parseRes.p6[1] - 2, radius: 2, fill: 'red'})
-            p56Line = new fabric.Line([parseRes.p5[0], parseRes.p5[1], parseRes.p6[0], parseRes.p6[1]], lineAttr)
+          if (parseRes.p4 != null) {
+            p34Line.set({'x2': parseRes.p4[0], 'y2': parseRes.p4[1]})
+            p4.set({'left': parseRes.p4[0] - pRadius, 'top': parseRes.p4[1] - pRadius})
           }
-          canvas.add(p01Line, p23Line, p56Line, p0, p1, p2, p3, p5, p6)
+          canvas.add(p01Line, p34Line, p25Line, p0, p1, p2, p3, p4, p5)
           canvas.renderAll.bind(canvas)
 
+          // 画布监听事件
           canvas.on('object:moving', (e) => {
             if (e.target) {
-              console.log(e.target)
+              let p = e.target
+              if (['p0', 'p1', 'p3', 'p4'].includes(p.self)) {
+                let curFilename = this.$store.state.File.params2.curFilename
+                let tempResList = JSON.parse(JSON.stringify(this.$store.state.File.params2.resList))
+                switch (p.self) {
+                  case 'p0':
+                    p.adLine.set({'x1': p.left + pRadius, 'y1': p.top + pRadius})
+                    p.centerP.set({
+                      left: (p.adLine.x1 + p.adLine.x2) / 2 - pRadius,
+                      top: (p.adLine.y1 + p.adLine.y2) / 2 - pRadius
+                    })
+                    p.centerLine.set({'x1': p.centerP.left + pRadius, 'y1': p.centerP.top + pRadius})
+                    tempResList[curFilename].parseRes.p0 = [p.adLine.x1, p.adLine.y1]
+                    tempResList[curFilename].parseRes.p2 = [p.centerP.left, p.centerP.top]
+                    break
+                  case 'p1':
+                    p.adLine.set({'x2': p.left + pRadius, 'y2': p.top + pRadius})
+                    p.centerP.set({
+                      left: (p.adLine.x1 + p.adLine.x2) / 2 - pRadius,
+                      top: (p.adLine.y1 + p.adLine.y2) / 2 - pRadius
+                    })
+                    p.centerLine.set({'x1': p.centerP.left + pRadius, 'y1': p.centerP.top + pRadius})
+                    tempResList[curFilename].parseRes.p1 = [p.adLine.x2, p.adLine.y2]
+                    tempResList[curFilename].parseRes.p2 = [p.centerP.left, p.centerP.top]
+                    break
+                  case 'p3':
+                    p.adLine.set({'x1': p.left + pRadius, 'y1': p.top + pRadius})
+                    p.centerP.set({
+                      left: (p.adLine.x1 + p.adLine.x2) / 2 - pRadius,
+                      top: (p.adLine.y1 + p.adLine.y2) / 2 - pRadius
+                    })
+                    p.centerLine.set({'x2': p.centerP.left + pRadius, 'y2': p.centerP.top + pRadius})
+                    tempResList[curFilename].parseRes.p3 = [p.adLine.x1, p.adLine.y1]
+                    tempResList[curFilename].parseRes.p5 = [p.centerP.left, p.centerP.top]
+                    break
+                  case 'p4':
+                    p.adLine.set({'x2': p.left + pRadius, 'y2': p.top + pRadius})
+                    p.centerP.set({
+                      left: (p.adLine.x1 + p.adLine.x2) / 2 - pRadius,
+                      top: (p.adLine.y1 + p.adLine.y2) / 2 - pRadius
+                    })
+                    p.centerLine.set({'x2': p.centerP.left + pRadius, 'y2': p.centerP.top + pRadius})
+                    tempResList[curFilename].parseRes.p4 = [p.adLine.x2, p.adLine.y2]
+                    tempResList[curFilename].parseRes.p5 = [p.centerP.left, p.centerP.top]
+                    break
+                }
+                tempResList[curFilename].isChanged = true
+                that.$store.commit('ChangeResList', {
+                  flag: 2,
+                  resList: tempResList
+                })
+                console.log(this.$store.state.File.params2.resList)
+              }
             }
           })
         }
@@ -133,26 +226,26 @@ export default {
       let f1Ymax = this.RestoreY(measureRes.femoralhead1.ymax, scale, originalHeight)
       let p0 = [sXmin, sYmin]
       let p1 = [sXmax, sYmax]
-      let p3 = [(p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2]
-      let p5 = [(f1Xmin + f1Xmax) / 2, (f1Ymin + f1Ymax) / 2]
-      let p2 = p5
-      let p6 = null
+      let p2 = [(p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2]
+      let p3 = [(f1Xmin + f1Xmax) / 2, (f1Ymin + f1Ymax) / 2]
+      let p5 = p3
+      let p4 = null
       // 第二个股骨头可能不存在
       if (measureRes.hasOwnProperty('femoralhead2')) {
         let f2Xmin = this.RestoreX(measureRes.femoralhead2.xmin, scale)
         let f2Ymin = this.RestoreY(measureRes.femoralhead2.ymin, scale, originalHeight)
         let f2Xmax = this.RestoreX(measureRes.femoralhead2.xmax, scale)
         let f2Ymax = this.RestoreY(measureRes.femoralhead2.ymax, scale, originalHeight)
-        p6 = [(f2Xmin + f2Xmax) / 2, (f2Ymin + f2Ymax) / 2]
-        p2 = [(p5[0] + p6[0]) / 2, (p5[1] + p6[1]) / 2]
+        p4 = [(f2Xmin + f2Xmax) / 2, (f2Ymin + f2Ymax) / 2]
+        p5 = [(p3[0] + p4[0]) / 2, (p3[1] + p4[1]) / 2]
       }
       parseRes = {
         'p0': p0,
         'p1': p1,
         'p2': p2,
         'p3': p3,
-        'p5': p5,
-        'p6': p6
+        'p4': p4,
+        'p5': p5
       }
       return parseRes
     },
