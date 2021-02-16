@@ -12,7 +12,7 @@
                 :highlight-current-row="true">
         <el-table-column min-width="65" :show-overflow-tooltip="true">
           <template slot-scope="scope">
-            <el-tooltip :content="scope.row.path" placement="top-start" :open-delay=700 effect="light">
+            <el-tooltip :content="scope.row.path" placement="top-start" :open-delay=1000 effect="light">
               <span>{{ scope.row.filename }}</span>
             </el-tooltip>
           </template>
@@ -36,7 +36,7 @@
                 :highlight-current-row="true">
         <el-table-column min-width="65" :show-overflow-tooltip="true">
           <template slot-scope="scope">
-            <el-tooltip :content="scope.row.path" placement="top-start" :open-delay=700 effect="light">
+            <el-tooltip :content="scope.row.path" placement="top-start" :open-delay=1000 effect="light">
               <span>{{ scope.row.filename }}</span>
             </el-tooltip>
           </template>

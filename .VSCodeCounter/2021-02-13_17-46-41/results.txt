@@ -1,0 +1,90 @@
+Date : 2021-02-13 17:46:41
+Directory : f:\Terry\ElectronWork\oims
+Total : 42 files,  20552 codes, 238 comments, 188 blanks, all 20978 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| JSON       |          2 |     18,487 |          0 |          2 |     18,489 |
+| Vue        |          7 |        942 |         15 |         27 |        984 |
+| JavaScript |         20 |        936 |        209 |        134 |      1,279 |
+| XML        |          9 |         90 |          1 |          2 |         93 |
+| YAML       |          2 |         58 |         10 |          9 |         77 |
+| HTML       |          1 |         20 |          3 |          2 |         25 |
+| Markdown   |          1 |         19 |          0 |         12 |         31 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                             | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                |         42 |     20,552 |        238 |        188 |     20,978 |
+| .electron-vue                                                                    |          6 |        579 |        142 |         70 |        791 |
+| src                                                                              |         23 |      1,210 |         72 |         67 |      1,349 |
+| src\main                                                                         |          2 |         61 |         34 |         16 |        111 |
+| src\renderer                                                                     |         20 |      1,129 |         35 |         49 |      1,213 |
+| src\renderer\assets                                                              |          8 |         25 |          1 |          1 |         27 |
+| src\renderer\assets\btn-icon                                                     |          8 |         25 |          1 |          1 |         27 |
+| src\renderer\components                                                          |          6 |        909 |         15 |         20 |        944 |
+| src\renderer\components\LandingPage                                              |          5 |        829 |         15 |         16 |        860 |
+| src\renderer\router                                                              |          1 |         16 |          0 |          3 |         19 |
+| src\renderer\store                                                               |          3 |        125 |         13 |         12 |        150 |
+| src\renderer\store\modules                                                       |          2 |        113 |         13 |          9 |        135 |
+| test                                                                             |          6 |        111 |         11 |         26 |        148 |
+| test\e2e                                                                         |          3 |         41 |          4 |         12 |         57 |
+| test\e2e\specs                                                                   |          1 |         11 |          0 |          3 |         14 |
+| test\unit                                                                        |          3 |         70 |          7 |         14 |         91 |
+| test\unit\specs                                                                  |          1 |         11 |          0 |          3 |         14 |
+| tmp                                                                              |          1 |         65 |          0 |          1 |         66 |
+| tmp\xml                                                                          |          1 |         65 |          0 |          1 |         66 |
++----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                         | language   | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| f:\Terry\ElectronWork\oims\.electron-vue\build.js                                | JavaScript |         20 |        105 |          7 |        132 |
+| f:\Terry\ElectronWork\oims\.electron-vue\dev-client.js                           | JavaScript |         23 |         14 |          4 |         41 |
+| f:\Terry\ElectronWork\oims\.electron-vue\dev-runner.js                           | JavaScript |        157 |          1 |         33 |        191 |
+| f:\Terry\ElectronWork\oims\.electron-vue\webpack.main.config.js                  | JavaScript |         70 |          6 |          8 |         84 |
+| f:\Terry\ElectronWork\oims\.electron-vue\webpack.renderer.config.js              | JavaScript |        168 |         13 |         10 |        191 |
+| f:\Terry\ElectronWork\oims\.electron-vue\webpack.web.config.js                   | JavaScript |        141 |          3 |          8 |        152 |
+| f:\Terry\ElectronWork\oims\.eslintrc.js                                          | JavaScript |         23 |          3 |          1 |         27 |
+| f:\Terry\ElectronWork\oims\.travis.yml                                           | YAML       |         36 |          7 |          1 |         44 |
+| f:\Terry\ElectronWork\oims\README.md                                             | Markdown   |         19 |          0 |         12 |         31 |
+| f:\Terry\ElectronWork\oims\appveyor.yml                                          | YAML       |         22 |          3 |          8 |         33 |
+| f:\Terry\ElectronWork\oims\package-lock.json                                     | JSON       |     18,352 |          0 |          1 |     18,353 |
+| f:\Terry\ElectronWork\oims\package.json                                          | JSON       |        135 |          0 |          1 |        136 |
+| f:\Terry\ElectronWork\oims\src\index.ejs                                         | HTML       |         20 |          3 |          2 |         25 |
+| f:\Terry\ElectronWork\oims\src\main\index.dev.js                                 | JavaScript |         10 |         10 |          4 |         24 |
+| f:\Terry\ElectronWork\oims\src\main\index.js                                     | JavaScript |         51 |         24 |         12 |         87 |
+| f:\Terry\ElectronWork\oims\src\renderer\App.vue                                  | Vue        |         33 |          0 |          7 |         40 |
+| f:\Terry\ElectronWork\oims\src\renderer\assets\btn-icon\brightness.svg           | XML        |         18 |          1 |          1 |         20 |
+| f:\Terry\ElectronWork\oims\src\renderer\assets\btn-icon\circle.svg               | XML        |          1 |          0 |          0 |          1 |
+| f:\Terry\ElectronWork\oims\src\renderer\assets\btn-icon\curved-line.svg          | XML        |          1 |          0 |          0 |          1 |
+| f:\Terry\ElectronWork\oims\src\renderer\assets\btn-icon\line.svg                 | XML        |          1 |          0 |          0 |          1 |
+| f:\Terry\ElectronWork\oims\src\renderer\assets\btn-icon\rectangle.svg            | XML        |          1 |          0 |          0 |          1 |
+| f:\Terry\ElectronWork\oims\src\renderer\assets\btn-icon\undo.svg                 | XML        |          1 |          0 |          0 |          1 |
+| f:\Terry\ElectronWork\oims\src\renderer\assets\btn-icon\zoom-in.svg              | XML        |          1 |          0 |          0 |          1 |
+| f:\Terry\ElectronWork\oims\src\renderer\assets\btn-icon\zoom-out.svg             | XML        |          1 |          0 |          0 |          1 |
+| f:\Terry\ElectronWork\oims\src\renderer\components\LandingPage.vue               | Vue        |         80 |          0 |          4 |         84 |
+| f:\Terry\ElectronWork\oims\src\renderer\components\LandingPage\FileListArea.vue  | Vue        |        197 |          1 |          2 |        200 |
+| f:\Terry\ElectronWork\oims\src\renderer\components\LandingPage\ImageArea.vue     | Vue        |        291 |          7 |          5 |        303 |
+| f:\Terry\ElectronWork\oims\src\renderer\components\LandingPage\ResultBox.vue     | Vue        |         74 |          1 |          2 |         77 |
+| f:\Terry\ElectronWork\oims\src\renderer\components\LandingPage\SubToolHeader.vue | Vue        |         87 |          1 |          2 |         90 |
+| f:\Terry\ElectronWork\oims\src\renderer\components\LandingPage\ToolHeader.vue    | Vue        |        180 |          5 |          5 |        190 |
+| f:\Terry\ElectronWork\oims\src\renderer\main.js                                  | JavaScript |         21 |          6 |          6 |         33 |
+| f:\Terry\ElectronWork\oims\src\renderer\router\index.js                          | JavaScript |         16 |          0 |          3 |         19 |
+| f:\Terry\ElectronWork\oims\src\renderer\store\index.js                           | JavaScript |         12 |          0 |          3 |         15 |
+| f:\Terry\ElectronWork\oims\src\renderer\store\modules\File.js                    | JavaScript |        106 |          9 |          5 |        120 |
+| f:\Terry\ElectronWork\oims\src\renderer\store\modules\index.js                   | JavaScript |          7 |          4 |          4 |         15 |
+| f:\Terry\ElectronWork\oims\test\e2e\index.js                                     | JavaScript |         10 |          4 |          5 |         19 |
+| f:\Terry\ElectronWork\oims\test\e2e\specs\Launch.spec.js                         | JavaScript |         11 |          0 |          3 |         14 |
+| f:\Terry\ElectronWork\oims\test\e2e\utils.js                                     | JavaScript |         20 |          0 |          4 |         24 |
+| f:\Terry\ElectronWork\oims\test\unit\index.js                                    | JavaScript |          7 |          4 |          3 |         14 |
+| f:\Terry\ElectronWork\oims\test\unit\karma.conf.js                               | JavaScript |         52 |          3 |          8 |         63 |
+| f:\Terry\ElectronWork\oims\test\unit\specs\LandingPage.spec.js                   | JavaScript |         11 |          0 |          3 |         14 |
+| f:\Terry\ElectronWork\oims\tmp\xml\result.xml                                    | XML        |         65 |          0 |          1 |         66 |
+| Total                                                                            |            |     20,552 |        238 |        188 |     20,978 |
++----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+

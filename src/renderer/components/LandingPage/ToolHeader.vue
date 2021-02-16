@@ -1,6 +1,6 @@
 <template>
   <div class="tool-header-content">
-    <div id="menuBtn" class="tool-btn" @click="isDrawerShow = true">
+    <div id="menuBtn" class="tool-btn" @click="isShowDrawer = true">
       <i class="fa fa-bars"></i>
       <span>菜单</span>
     </div>
@@ -26,7 +26,7 @@
         <span>打印</span>
       </div>
     </div>
-    <el-drawer direction="ltr" size="18%" :show-close="false" :visible.sync="isDrawerShow">
+    <el-drawer direction="ltr" size="18%" :show-close="false" :visible.sync="isShowDrawer">
       <el-menu :unique-opened=true>
         <el-submenu index="1">
           <div class="drawer-title-box" slot="title">
@@ -63,18 +63,24 @@
         </el-menu-item>
       </el-menu>
     </el-drawer>
+    <measure-dialog :isShowDialog="isShowDialog" @CloseDialog="CloseDialog"></measure-dialog>
   </div>
 </template>
 
 <script>
+import MeasureDialog from './MeasureDialog'
 const {dialog} = require('electron').remote
 const fs = require('fs')
 const parser = require('fast-xml-parser')
 
 export default {
+  components: {
+    'measure-dialog': MeasureDialog
+  },
   data () {
     return {
-      isDrawerShow: false
+      isShowDrawer: false,
+      isShowDialog: false
     }
   },
   methods: {
@@ -112,14 +118,18 @@ export default {
         })
       }
     },
+    CloseDialog () {
+      this.isShowDialog = false
+    },
     Measure () {
+      this.isShowDialog = true
       // （将图片文件传送至后端，量测后，将结果保存至本地）
       // 当前仅侧面图！！！
       // 以下为解析文件步骤（仅将原始数据存入全局，并设置isMeasured为true）
       let that = this
       fs.readFile(that.$store.state.File.resultPath, (err, data) => {
         if (err) {
-          return console.error(err)
+          return console.log(err)
         }
         let tempResList = JSON.parse(JSON.stringify(that.$store.state.File.params2.resList))
         console.log(tempResList)

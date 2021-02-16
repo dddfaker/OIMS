@@ -35,5 +35,9 @@
   .cell{
     text-overflow: unset !important;
   }
+
+  .el-dialog__body{
+    padding: 15px 20px !important;
+  }
   
 </style>
