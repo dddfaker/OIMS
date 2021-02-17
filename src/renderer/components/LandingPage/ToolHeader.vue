@@ -41,7 +41,7 @@
           <el-menu-item index="1-1" @click="SelectFrontDir">选择正面图文件夹</el-menu-item>
           <el-menu-item index="1-2" @click="SelectSideDir">选择侧面图文件夹</el-menu-item>
           <el-divider></el-divider>
-          <el-menu-item index="1-3">打印（导出为PDF）</el-menu-item>
+          <el-menu-item index="1-3" @click="Pdfjs">打印（导出为PDF）</el-menu-item>
           <el-menu-item index="1-4">使用说明</el-menu-item>
         </el-submenu>
         <el-submenu index="2">
