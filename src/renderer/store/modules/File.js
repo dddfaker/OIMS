@@ -8,7 +8,8 @@ const state = {
     'cutDirPath': './tmp/img/front_cut/', // 裁剪后保存路径
     'fileList': {}, // 文件列表（用于维护文件列表栏）
     'resList': {}, // 量测结果列表（用于维护图片的量测结果，包含每一项）
-    'curFilename': '' // 当前打开的文件文件名
+    'curFilename': '', // 当前打开的文件文件名
+    'canvas1': ''
   },
   // 侧面图的相关变量
   params2: {
@@ -17,11 +18,15 @@ const state = {
     'cutDirPath': './tmp/img/side_cut/',
     'fileList': {},
     'resList': {},
-    'curFilename': ''
+    'curFilename': '',
+    'canvas2': ''
   },
   selectedImgBox: 1, // 当前选中的图片框
   resultPath: './tmp/xml/result.xml', // 量测结果文件路径
-  isMeasuring: false // 是否在量测中
+  isMeasuring: false, // 是否在量测中
+  ss: '',
+  pt: '',
+  pi: ''
 }
 
 const mutations = {

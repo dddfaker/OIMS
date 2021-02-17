@@ -36,6 +36,9 @@ export default {
           'pt': '',
           'pi': ''
         }
+        this.$store.state.File.ss = -1000
+        this.$store.state.File.pt = -1000
+        this.$store.state.File.pi = -1000
         return false
       }
     }
@@ -49,6 +52,9 @@ export default {
       let pt = 90.0 - (Math.atan((parseRes.p2[1] - parseRes.p5[1]) / (parseRes.p2[0] - parseRes.p5[0])) *
                 180 / Math.PI)
       let pi = ss + pt
+      this.$store.state.File.ss = ss
+      this.$store.state.File.pt = pt
+      this.$store.state.File.pi = pi
       return {
         'ss': ss.toFixed(2),
         'pt': pt.toFixed(2),

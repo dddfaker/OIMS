@@ -22,7 +22,7 @@
         <span>量测</span>
       </div>
       <div class="tool-btn">
-        <i class="fa fa-print"></i>
+        <i class="fa fa-print" @click="Pdfjs"></i>
         <span>打印</span>
       </div>
     </div>
@@ -75,6 +75,7 @@
 </template>
 
 <script>
+import {jsPDF} from 'jspdf'
 import MeasureDialog from './MeasureDialog'
 const {dialog} = require('electron').remote
 const fs = require('fs')
@@ -191,6 +192,29 @@ export default {
           resList: tempResList
         })
       })
+    },
+    Pdfjs () {
+      var canvas1 = this.$store.state.File.params1.canvas1
+      var canvas2 = this.$store.state.File.params2.canvas2
+      var pdf = new jsPDF()
+      var imgData = canvas1.toDataURL('image/png')
+      pdf.addImage(imgData, 'JPEG', 20, 15, 249 / 4, 500 / 4)
+      pdf.text(this.$store.state.File.params1.curFilename, 40, 10)
+      imgData = canvas2.toDataURL('image/png')
+      pdf.addImage(imgData, 'JPEG', 120, 15, 249 / 4, 500 / 4)
+      pdf.text(this.$store.state.File.params2.curFilename, 140, 10)
+      if (this.$store.state.File.ss > -1000) {
+        pdf.text('ss:', 139, 147)
+        pdf.text(147, 147, this.$store.state.File.ss.toFixed(2))
+        pdf.text('pt:', 139, 157)
+        pdf.text(147, 157, this.$store.state.File.pt.toFixed(2))
+        pdf.text('pi:', 139, 167)
+        pdf.text(147, 167, this.$store.state.File.pi.toFixed(2))
+      }
+      // pdf.addPage()
+      // pdf.save('C:\\Users\\dddfaker\\Desktop\\a.pdf')
+      pdf.save('./test_img/jspdf.pdf')
+      alert('打印成功')
     }
   }
 }

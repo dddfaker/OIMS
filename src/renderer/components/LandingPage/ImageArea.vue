@@ -41,6 +41,7 @@ export default {
       } else {
         canvas1.clear()
       }
+      this.$store.state.File.params1.canvas1 = canvas1
     },
     img2Name (nv, ov) {
       if (nv !== '') {
@@ -49,6 +50,7 @@ export default {
       } else {
         canvas2.clear()
       }
+      this.$store.state.File.params2.canvas2 = canvas2
     }
   },
   methods: {
