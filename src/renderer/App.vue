@@ -19,6 +19,10 @@
   #app{
     height: 100%;
   }
+
+  button{
+    font-family: "微软雅黑";
+  }
   
   .el-card__header {
     padding: 15px 20px !important;

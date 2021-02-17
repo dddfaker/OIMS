@@ -1,10 +1,15 @@
 <template>
-  <el-dialog title="选择需要量测的图片" :visible="isShowDialog"
+  <el-dialog :visible="isShowDialog"
             @close="Close" @open="Open" width="45%">
+    <div slot="title">
+      <span style="font-size:1.3rem">选择需要量测的图片</span>
+      <i style="margin-left: 2%">(已量测图片已被自动选择)</i>
+    </div>
     <div class="dialog-file-list-area-content">
       <el-card class="dialog-file-list-box">
         <div class="file-list-header" slot="header">
           <span class="file-list-title">正面图</span>
+          <el-checkbox v-model="isFrontAllSelected" @change="SelectAll(1)">[全选]</el-checkbox>
         </div>
         <el-table ref="frontTable" :data="frontListData" :show-header="false"  max-height="345">
           <el-table-column type="selection">
@@ -16,6 +21,7 @@
       <el-card class="dialog-file-list-box">
         <div class="file-list-header" slot="header">
           <span class="file-list-title">侧面图</span>
+          <el-checkbox v-model="isSideAllSelected" @change="SelectAll(2)">[全选]</el-checkbox>
         </div>
         <el-table ref="sideTable" :data="sideListData" :show-header="false"  max-height="345">
           <el-table-column type="selection">
@@ -26,7 +32,7 @@
       </el-card>
     </div>
     <div slot="footer">
-      <el-button type="primary">量测</el-button>
+      <el-button type="primary" @click="Measure" style="margin-right:2%">量测</el-button>
     </div>
   </el-dialog>
 </template>
@@ -37,12 +43,16 @@ export default {
   data () {
     return {
       frontListData: [],
-      sideListData: []
+      sideListData: [],
+      isFrontAllSelected: false,
+      isSideAllSelected: false
     }
   },
   methods: {
     Open () {
       let that = this
+      that.isFrontAllSelected = false
+      that.isSideAllSelected = false
       that.frontListData = this.GetListData(1)
       that.sideListData = this.GetListData(2)
       that.frontListData.forEach(item => {
@@ -71,6 +81,33 @@ export default {
         })
       }
       return tempListData
+    },
+    SelectAll (flag) {
+      if (flag === 1) {
+        this.frontListData.forEach(item => {
+          this.$refs.frontTable.toggleRowSelection(item, this.isFrontAllSelected)
+        })
+      } else {
+        this.sideListData.forEach(item => {
+          this.$refs.sideTable.toggleRowSelection(item, this.isSideAllSelected)
+        })
+      }
+    },
+    Measure () {
+      // 当前只量测侧面图！！！！！
+      this.Close()
+      this.$notify.info({
+        title: '消息',
+        message: '正在量测中，请保持网络通畅。预计所需时间为5分钟',
+        duration: 3000,
+        position: 'bottom-left'
+      })
+      this.$store.commit('ChangeMeasureState', {isMeasuring: true})
+      let selectedArr = []
+      this.$refs.sideTable.selection.forEach(item => {
+        selectedArr.push(item.path)
+      })
+      this.$emit('StartMeasure', selectedArr)
     },
     Close () {
       this.$emit('CloseDialog')

@@ -63,6 +63,7 @@
     "font-awesome": "^4.7.0",
     "less": "^4.1.1",
     "less-loader": "^7.3.0",
+    "mime-type": "^4.0.0",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",

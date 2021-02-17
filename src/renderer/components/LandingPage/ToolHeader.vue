@@ -26,6 +26,11 @@
         <span>打印</span>
       </div>
     </div>
+    <div class="measure-state-box" :style="{'visibility':isMeasuring?'visible':'hidden'}">
+      <i class="fa fa-spinner fa-spin"></i>
+      <span>量测中，请稍后</span>
+      <el-button @click="CancelMeasure" type="danger" round size="mini">取消</el-button>
+    </div>
     <el-drawer direction="ltr" size="18%" :show-close="false" :visible.sync="isShowDrawer">
       <el-menu :unique-opened=true>
         <el-submenu index="1">
@@ -63,7 +68,9 @@
         </el-menu-item>
       </el-menu>
     </el-drawer>
-    <measure-dialog :isShowDialog="isShowDialog" @CloseDialog="CloseDialog"></measure-dialog>
+    <measure-dialog :isShowDialog="isShowDialog" @CloseDialog="CloseDialog"
+                    @StartMeasure="StartMeasure">
+    </measure-dialog>
   </div>
 </template>
 
@@ -72,6 +79,7 @@ import MeasureDialog from './MeasureDialog'
 const {dialog} = require('electron').remote
 const fs = require('fs')
 const parser = require('fast-xml-parser')
+const axios = require('axios')
 
 export default {
   components: {
@@ -81,6 +89,11 @@ export default {
     return {
       isShowDrawer: false,
       isShowDialog: false
+    }
+  },
+  computed: {
+    isMeasuring () {
+      return this.$store.state.File.isMeasuring
     }
   },
   methods: {
@@ -121,6 +134,37 @@ export default {
     CloseDialog () {
       this.isShowDialog = false
     },
+    StartMeasure (seletedArr) {
+      let jsonData = []
+      seletedArr.forEach(item => {
+        let data = fs.readFileSync(item)
+        data = Buffer.from(data).toString('base64')
+        jsonData.push({
+          name: item.split('\\').pop(),
+          data: data
+        })
+      })
+      console.log(jsonData)
+      axios({
+        method: 'post',
+        url: '/',
+        data: jsonData
+      }).then(res => {
+        console.log(res.data)
+        // 开启计时器！！！！
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    CancelMeasure () {
+      this.$confirm('此操作将终止量测，是否确定终止?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$store.commit('ChangeMeasureState', {isMeasuring: false})
+      })
+    },
     Measure () {
       this.isShowDialog = true
       // （将图片文件传送至后端，量测后，将结果保存至本地）
@@ -156,6 +200,7 @@ export default {
   .tool-header-content{
     background: #1a1b21;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     width: 100%;
   }
@@ -184,7 +229,7 @@ export default {
     font-weight: lighter;
   }
   .tool-btn-center-group{
-    margin-left: 20%;
+    margin-right: 20%;
     display: flex;
   }
 
@@ -196,5 +241,16 @@ export default {
   .drawer-title-box>i{
     zoom: 1.2;
     margin-right: 5px;
+  }
+
+  // 量测状态栏
+  .measure-state-box{
+    color: rgb(218, 218, 218);
+    font-size: 0.9rem;
+    padding-right: 2%;
+  }
+  .measure-state-box>button{
+    padding: 5px 10px !important;
+    margin-left: 5px;
   }
 </style>

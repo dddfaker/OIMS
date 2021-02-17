@@ -20,7 +20,8 @@ const state = {
     'curFilename': ''
   },
   selectedImgBox: 1, // 当前选中的图片框
-  resultPath: './tmp/xml/result.xml' // 量测结果文件路径
+  resultPath: './tmp/xml/result.xml', // 量测结果文件路径
+  isMeasuring: false // 是否在量测中
 }
 
 const mutations = {
@@ -61,6 +62,10 @@ const mutations = {
     if (state.selectedImgBox !== payload.flag) {
       state.selectedImgBox = payload.flag
     }
+  },
+  // 改变量测状态
+  ChangeMeasureState (state, payload) {
+    state.isMeasuring = payload.isMeasuring
   }
 }
 
